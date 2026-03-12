@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Heart Risk Analyzer — ระบบวิเคราะห์ความเสี่ยงโรคหัวใจ</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- ======================================================
+     HERO
+     ====================================================== -->
+<div class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-tag">❤️ Medical Analytics</div>
+  <h1>Heart <span>Risk</span> Analyzer</h1>
+  <p>วิเคราะห์ข้อมูลสถิติและประเมินความเสี่ยงโรคหัวใจด้วย AI</p>
+  <div class="dataset-badge">
+    <span class="dot"></span>
+    303 ผู้ป่วย · 14 ตัวแปร · Cleveland Heart Disease Dataset
+  </div>
+</div>
+
+<!-- ======================================================
+     NAVIGATION TABS
+     ====================================================== -->
+<div class="nav-tabs">
+  <button class="tab-btn active" onclick="switchTab('stats')">📊 สถิติข้อมูล</button>
+  <button class="tab-btn"        onclick="switchTab('predict')">🔬 ประเมินความเสี่ยง</button>
+  <button class="tab-btn"        onclick="switchTab('info')">📋 รายละเอียดข้อมูล</button>
+</div>
+
+<!-- ======================================================
+     TAB 1 — STATISTICS
+     ====================================================== -->
+<div id="tab-stats" class="section active">
+  <div class="section-title">Dataset Overview</div>
+  <div class="section-heading">ภาพรวมข้อมูล</div>
+  <div class="section-sub">สถิติจากชุดข้อมูล Cleveland Heart Disease Dataset ที่มีผู้ป่วย 303 ราย</div>
+
+  <!-- Summary cards -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-label">ผู้ป่วยทั้งหมด</div>
+      <div class="stat-value">303</div>
+      <div class="stat-sub">รายในชุดข้อมูล</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">เสี่ยงโรคหัวใจ</div>
+      <div class="stat-value" style="color:var(--accent)">165</div>
+      <div class="stat-sub">คิดเป็น 54.5%</div>
+    </div>
+    <div class="stat-card green">
+      <div class="stat-label">ไม่เสี่ยงโรคหัวใจ</div>
+      <div class="stat-value" style="color:var(--good)">138</div>
+      <div class="stat-sub">คิดเป็น 45.5%</div>
+    </div>
+    <div class="stat-card blue">
+      <div class="stat-label">อายุเฉลี่ย</div>
+      <div class="stat-value" style="color:var(--accent3)">54.4</div>
+      <div class="stat-sub">ปี (29–77 ปี)</div>
+    </div>
+    <div class="stat-card yellow">
+      <div class="stat-label">คอเลสเตอรอลเฉลี่ย</div>
+      <div class="stat-value" style="color:var(--warn)">246</div>
+      <div class="stat-sub">mg/dl</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">อัตราหัวใจสูงสุดเฉลี่ย</div>
+      <div class="stat-value">149.6</div>
+      <div class="stat-sub">ครั้ง/นาที</div>
+    </div>
+  </div>
+
+  <!-- Charts -->
+  <div class="charts-grid">
+
+    <!-- Gender donut -->
+    <div class="chart-card">
+      <div class="chart-title">เพศผู้ป่วย</div>
+      <div class="donut-wrap">
+        <svg class="donut" width="120" height="120" viewBox="0 0 120 120">
+          <circle cx="60" cy="60" r="46" fill="none" stroke="#1a1a25" stroke-width="16"/>
+          <circle id="donut-male"   cx="60" cy="60" r="46" fill="none" stroke="#00e5ff" stroke-width="16"
+            stroke-dasharray="0 289" stroke-linecap="round"/>
+          <circle id="donut-female" cx="60" cy="60" r="46" fill="none" stroke="#ff3b5c" stroke-width="16"
+            stroke-dasharray="0 289" stroke-dashoffset="0" stroke-linecap="round"/>
+        </svg>
+        <div class="donut-legend">
+          <div class="legend-item">
+            <div class="legend-dot" style="background:#00e5ff"></div>
+            <span class="legend-text">ชาย</span>
+            <span class="legend-val">207 (68%)</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background:#ff3b5c"></div>
+            <span class="legend-text">หญิง</span>
+            <span class="legend-val">96 (32%)</span>
+          </div>
+          <div style="margin-top:16px;font-size:12px;color:var(--muted);line-height:1.5;">
+            ผู้ชายมีความเสี่ยงโรคหัวใจ<br>สูงกว่าผู้หญิงในชุดข้อมูลนี้
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Age group risk -->
+    <div class="chart-card">
+      <div class="chart-title">ความเสี่ยงตามกลุ่มอายุ</div>
+      <div class="bar-group">
+        <div class="bar-label"><span>อายุ &lt;40 ปี (16 คน)</span><span style="color:var(--accent3)">75.0%</span></div>
+        <div class="bar-track"><div class="bar-fill blue" style="width:0%" data-w="75%"></div></div>
+      </div>
+      <div class="bar-group">
+        <div class="bar-label"><span>อายุ 40–49 ปี (72 คน)</span><span style="color:var(--accent3)">69.4%</span></div>
+        <div class="bar-track"><div class="bar-fill blue" style="width:0%" data-w="69.4%"></div></div>
+      </div>
+      <div class="bar-group">
+        <div class="bar-label"><span>อายุ 50–59 ปี (125 คน)</span><span style="color:var(--warn)">52.0%</span></div>
+        <div class="bar-track"><div class="bar-fill red" style="width:0%" data-w="52%"></div></div>
+      </div>
+      <div class="bar-group">
+        <div class="bar-label"><span>อายุ 60+ ปี (90 คน)</span><span style="color:var(--accent)">42.2%</span></div>
+        <div class="bar-track"><div class="bar-fill red" style="width:0%" data-w="42.2%"></div></div>
+      </div>
+      <div style="font-size:12px;color:var(--muted);margin-top:16px;">% ผู้ที่มีความเสี่ยงในแต่ละกลุ่มอายุ</div>
+    </div>
+
+    <!-- Chest pain type -->
+    <div class="chart-card">
+      <div class="chart-title">ประเภทอาการเจ็บหน้าอก (Chest Pain Type)</div>
+      <div class="bar-group">
+        <div class="bar-label"><span>Type 0: Typical Angina (143)</span><span>47.2%</span></div>
+        <div class="bar-track"><div class="bar-fill red" style="width:0%" data-w="47.2%"></div></div>
+      </div>
+      <div class="bar-group">
+        <div class="bar-label"><span>Type 1: Atypical Angina (50)</span><span>16.5%</span></div>
+        <div class="bar-track"><div class="bar-fill red" style="width:0%" data-w="16.5%"></div></div>
+      </div>
+      <div class="bar-group">
+        <div class="bar-label"><span>Type 2: Non-anginal Pain (87)</span><span>28.7%</span></div>
+        <div class="bar-track"><div class="bar-fill red" style="width:0%" data-w="28.7%"></div></div>
+      </div>
+      <div class="bar-group">
+        <div class="bar-label"><span>Type 3: Asymptomatic (23)</span><span>7.6%</span></div>
+        <div class="bar-track"><div class="bar-fill red" style="width:0%" data-w="7.6%"></div></div>
+      </div>
+    </div>
+
+    <!-- Key metrics -->
+    <div class="chart-card">
+      <div class="chart-title">ค่าเฉลี่ยตัวแปรสำคัญ</div>
+      <div class="scatter-info">
+        <div class="info-block">
+          <div class="info-block-label">ความดันโลหิตขณะพัก</div>
+          <div class="info-block-value">131.6 <span class="info-block-unit">mmHg</span></div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-label">ระดับน้ำตาลในเลือด</div>
+          <div class="info-block-value">14.9<span class="info-block-unit">% &gt;120</span></div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-label">อัตราหัวใจสูงสุด</div>
+          <div class="info-block-value">149.6 <span class="info-block-unit">bpm</span></div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-label">Oldpeak เฉลี่ย</div>
+          <div class="info-block-value">1.04 <span class="info-block-unit">mm</span></div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-label">Exercise Angina</div>
+          <div class="info-block-value">32.7<span class="info-block-unit">%</span></div>
+        </div>
+        <div class="info-block">
+          <div class="info-block-label">Major Vessels เฉลี่ย</div>
+          <div class="info-block-value">0.73 <span class="info-block-unit">เส้น</span></div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /charts-grid -->
+</div><!-- /tab-stats -->
+
+<!-- ======================================================
+     TAB 2 — PREDICTION FORM
+     ====================================================== -->
+<div id="tab-predict" class="section">
+  <div class="section-title">Risk Assessment</div>
+  <div class="section-heading">ประเมินความเสี่ยงโรคหัวใจ</div>
+  <div class="section-sub">
+    กรอกข้อมูลสุขภาพของคุณเพื่อให้ AI วิเคราะห์ความเสี่ยง —
+    ผลลัพธ์เป็นการประเมินเบื้องต้นเท่านั้น ไม่ใช่การวินิจฉัยทางการแพทย์
+  </div>
+
+  <div class="form-grid">
+
+    <!-- Age -->
+    <div class="form-group">
+      <label>อายุ (Age)</label>
+      <div class="field-desc">อายุของผู้ป่วยเป็นปี</div>
+      <input type="range" id="f-age" min="20" max="80" value="50"
+             oninput="document.getElementById('v-age').textContent=this.value">
+      <div class="range-display">
+        <div><span class="range-val" id="v-age">50</span> <span class="range-unit">ปี</span></div>
+        <div style="font-size:11px;color:var(--muted)">20–80</div>
+      </div>
+    </div>
+
+    <!-- Sex -->
+    <div class="form-group">
+      <label>เพศ (Sex)</label>
+      <div class="field-desc">เพศทางชีววิทยา</div>
+      <select id="f-sex">
+        <option value="1">ชาย (Male)</option>
+        <option value="0">หญิง (Female)</option>
+      </select>
+    </div>
+
+    <!-- Chest Pain -->
+    <div class="form-group">
+      <label>อาการเจ็บหน้าอก (Chest Pain Type)</label>
+      <div class="field-desc">ประเภทอาการเจ็บหน้าอกที่พบ</div>
+      <select id="f-cp">
+        <option value="0">Type 0: Typical Angina (เจ็บหน้าอกทั่วไป)</option>
+        <option value="1">Type 1: Atypical Angina (ผิดปกติ)</option>
+        <option value="2">Type 2: Non-anginal Pain (ไม่ใช่ angina)</option>
+        <option value="3">Type 3: Asymptomatic (ไม่มีอาการ)</option>
+      </select>
+    </div>
+
+    <!-- Blood pressure -->
+    <div class="form-group">
+      <label>ความดันโลหิต (Resting BP)</label>
+      <div class="field-desc">ความดันโลหิตขณะพัก (mmHg)</div>
+      <input type="range" id="f-trestbps" min="90" max="200" value="130"
+             oninput="document.getElementById('v-bp').textContent=this.value">
+      <div class="range-display">
+        <div><span class="range-val" id="v-bp">130</span> <span class="range-unit">mmHg</span></div>
+        <div style="font-size:11px;color:var(--muted)">90–200</div>
+      </div>
+    </div>
+
+    <!-- Cholesterol -->
+    <div class="form-group">
+      <label>คอเลสเตอรอล (Cholesterol)</label>
+      <div class="field-desc">ระดับคอเลสเตอรอลในเลือด (mg/dl)</div>
+      <input type="range" id="f-chol" min="120" max="580" value="246"
+             oninput="document.getElementById('v-chol').textContent=this.value">
+      <div class="range-display">
+        <div><span class="range-val" id="v-chol">246</span> <span class="range-unit">mg/dl</span></div>
+        <div style="font-size:11px;color:var(--muted)">120–580</div>
+      </div>
+    </div>
+
+    <!-- Fasting blood sugar -->
+    <div class="form-group">
+      <label>น้ำตาลในเลือด (Fasting Blood Sugar)</label>
+      <div class="field-desc">ระดับน้ำตาลในเลือดหลังอดอาหาร</div>
+      <select id="f-fbs">
+        <option value="0">ปกติ (≤120 mg/dl)</option>
+        <option value="1">สูง (&gt;120 mg/dl)</option>
+      </select>
+    </div>
+
+    <!-- Resting ECG -->
+    <div class="form-group">
+      <label>ผล ECG ขณะพัก (Rest ECG)</label>
+      <div class="field-desc">ผลการตรวจคลื่นไฟฟ้าหัวใจขณะพัก</div>
+      <select id="f-restecg">
+        <option value="0">0: ปกติ (Normal)</option>
+        <option value="1">1: ST-T wave abnormality</option>
+        <option value="2">2: Left ventricular hypertrophy</option>
+      </select>
+    </div>
+
+    <!-- Max heart rate -->
+    <div class="form-group">
+      <label>อัตราหัวใจสูงสุด (Max Heart Rate)</label>
+      <div class="field-desc">อัตราการเต้นหัวใจสูงสุดที่ทำได้</div>
+      <input type="range" id="f-thalach" min="70" max="202" value="150"
+             oninput="document.getElementById('v-hr').textContent=this.value">
+      <div class="range-display">
+        <div><span class="range-val" id="v-hr">150</span> <span class="range-unit">bpm</span></div>
+        <div style="font-size:11px;color:var(--muted)">70–202</div>
+      </div>
+    </div>
+
+    <!-- Exercise angina -->
+    <div class="form-group">
+      <label>อาการเจ็บหน้าอกจากออกกำลังกาย (Exercise Angina)</label>
+      <div class="field-desc">เจ็บหน้าอกเมื่อออกกำลังกาย</div>
+      <select id="f-exang">
+        <option value="0">ไม่มี (No)</option>
+        <option value="1">มี (Yes)</option>
+      </select>
+    </div>
+
+    <!-- Oldpeak -->
+    <div class="form-group">
+      <label>Oldpeak (ST Depression)</label>
+      <div class="field-desc">การเปลี่ยนแปลง ST ขณะออกกำลังกายเทียบกับขณะพัก</div>
+      <input type="range" id="f-oldpeak" min="0" max="6" step="0.1" value="1"
+             oninput="document.getElementById('v-op').textContent=parseFloat(this.value).toFixed(1)">
+      <div class="range-display">
+        <div><span class="range-val" id="v-op">1.0</span> <span class="range-unit">mm</span></div>
+        <div style="font-size:11px;color:var(--muted)">0–6</div>
+      </div>
+    </div>
+
+    <!-- Slope -->
+    <div class="form-group">
+      <label>Slope ของ ST Segment</label>
+      <div class="field-desc">ความชันของ ST segment ขณะออกกำลังกาย</div>
+      <select id="f-slope">
+        <option value="0">0: Downsloping (ลาด)</option>
+        <option value="1">1: Flat (แบน)</option>
+        <option value="2">2: Upsloping (ขึ้น)</option>
+      </select>
+    </div>
+
+    <!-- CA -->
+    <div class="form-group">
+      <label>หลอดเลือดหัวใจ (CA)</label>
+      <div class="field-desc">จำนวนหลอดเลือดหลักที่เห็นจาก fluoroscopy</div>
+      <select id="f-ca">
+        <option value="0">0 เส้น</option>
+        <option value="1">1 เส้น</option>
+        <option value="2">2 เส้น</option>
+        <option value="3">3 เส้น</option>
+      </select>
+    </div>
+
+    <!-- Thal -->
+    <div class="form-group">
+      <label>Thalassemia (Thal)</label>
+      <div class="field-desc">ผลการตรวจ thalassemia</div>
+      <select id="f-thal">
+        <option value="0">0: ปกติ (Normal)</option>
+        <option value="1">1: Fixed Defect</option>
+        <option value="2">2: Normal</option>
+        <option value="3">3: Reversable Defect</option>
+      </select>
+    </div>
+
+  </div><!-- /form-grid -->
+
+  <button class="btn-predict" id="btn-predict" onclick="runPrediction()">
+    🔍 วิเคราะห์ความเสี่ยง
+  </button>
+
+  <!-- Result panel -->
+  <div id="result-panel" class="result-panel">
+    <div class="result-header">
+      <div>
+        <div id="result-score-big" class="result-score-big">—</div>
+        <div class="result-score-label">คะแนนความเสี่ยง (0–100)</div>
+      </div>
+      <div id="result-badge" class="result-risk-badge">—</div>
+    </div>
+
+    <div class="risk-bar-container">
+      <div class="risk-bar-track">
+        <div id="risk-thumb" class="risk-bar-thumb" style="left:0%"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-top:8px;font-size:11px;color:var(--muted);font-family:var(--font-mono);">
+        <span>ต่ำมาก</span><span>ปานกลาง</span><span>สูงมาก</span>
+      </div>
+    </div>
+
+    <div id="analysis-grid" class="analysis-grid"></div>
+
+    <div style="margin-top:24px;">
+      <div class="ai-response-header">
+        AI Analysis
+        <span id="loading-dots" class="loading-dots" style="display:none">
+          <span></span><span></span><span></span>
+        </span>
+      </div>
+      <div id="ai-response" class="ai-response">กำลังวิเคราะห์...</div>
+    </div>
+  </div><!-- /result-panel -->
+
+</div><!-- /tab-predict -->
+
+<!-- ======================================================
+     TAB 3 — DATASET INFO
+     ====================================================== -->
+<div id="tab-info" class="section">
+  <div class="section-title">Dataset Features</div>
+  <div class="section-heading">รายละเอียดตัวแปร</div>
+  <div class="section-sub">คำอธิบายตัวแปร 14 ตัวแปรในชุดข้อมูล Cleveland Heart Disease Dataset</div>
+
+  <div class="chart-card" style="overflow-x:auto">
+    <table class="feature-table">
+      <thead>
+        <tr>
+          <th>ตัวแปร</th>
+          <th>ชื่อเต็ม</th>
+          <th>ประเภท</th>
+          <th>ช่วงค่า</th>
+          <th>คำอธิบาย</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td class="feat-name">age</td>      <td>อายุ</td>                     <td>ตัวเลข</td>   <td>29–77</td>  <td>อายุของผู้ป่วย (ปี)</td></tr>
+        <tr><td class="feat-name">sex</td>      <td>เพศ</td>                      <td>หมวดหมู่</td> <td>0, 1</td>   <td>1 = ชาย, 0 = หญิง</td></tr>
+        <tr><td class="feat-name">cp</td>       <td>Chest Pain Type</td>          <td>หมวดหมู่</td> <td>0–3</td>   <td>ประเภทอาการเจ็บหน้าอก (0=typical, 3=asymptomatic)</td></tr>
+        <tr><td class="feat-name">trestbps</td> <td>Resting Blood Pressure</td>   <td>ตัวเลข</td>   <td>94–200</td> <td>ความดันโลหิตขณะพัก (mmHg)</td></tr>
+        <tr><td class="feat-name">chol</td>     <td>Cholesterol</td>              <td>ตัวเลข</td>   <td>126–564</td><td>ระดับคอเลสเตอรอลในเลือด (mg/dl)</td></tr>
+        <tr><td class="feat-name">fbs</td>      <td>Fasting Blood Sugar</td>      <td>หมวดหมู่</td> <td>0, 1</td>   <td>1 = น้ำตาลในเลือด &gt;120 mg/dl</td></tr>
+        <tr><td class="feat-name">restecg</td>  <td>Resting ECG</td>              <td>หมวดหมู่</td> <td>0–2</td>   <td>ผลตรวจ ECG ขณะพัก</td></tr>
+        <tr><td class="feat-name">thalach</td>  <td>Max Heart Rate</td>           <td>ตัวเลข</td>   <td>71–202</td> <td>อัตราหัวใจสูงสุดที่ทำได้</td></tr>
+        <tr><td class="feat-name">exang</td>    <td>Exercise Angina</td>          <td>หมวดหมู่</td> <td>0, 1</td>   <td>1 = เจ็บหน้าอกเมื่อออกกำลังกาย</td></tr>
+        <tr><td class="feat-name">oldpeak</td>  <td>ST Depression</td>            <td>ตัวเลข</td>   <td>0–6.2</td>  <td>การลดลงของ ST segment ขณะออกกำลังกาย</td></tr>
+        <tr><td class="feat-name">slope</td>    <td>ST Slope</td>                 <td>หมวดหมู่</td> <td>0–2</td>   <td>ความชันของ ST ขณะออกกำลังกาย (0=downsloping)</td></tr>
+        <tr><td class="feat-name">ca</td>       <td>Major Vessels</td>            <td>ตัวเลข</td>   <td>0–4</td>   <td>จำนวนหลอดเลือดหลักที่เห็นจาก fluoroscopy</td></tr>
+        <tr><td class="feat-name">thal</td>     <td>Thalassemia</td>              <td>หมวดหมู่</td> <td>0–3</td>   <td>ผลการตรวจ thalassemia</td></tr>
+        <tr><td class="feat-name">target</td>   <td>ผลการวินิจฉัย</td>           <td>หมวดหมู่</td> <td>0, 1</td>   <td>1 = มีความเสี่ยงโรคหัวใจ, 0 = ไม่มีความเสี่ยง</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div style="margin-top:32px;padding:20px;background:var(--surface);border:1px solid var(--border);border-radius:8px;border-left:3px solid var(--accent)">
+    <div style="font-family:var(--font-mono);font-size:10px;letter-spacing:2px;color:var(--accent);margin-bottom:10px;text-transform:uppercase">
+      ⚠️ ข้อจำกัดความรับผิดชอบ
+    </div>
+    <p style="font-size:14px;color:var(--muted);line-height:1.7">
+      ระบบนี้สร้างขึ้นเพื่อวัตถุประสงค์การศึกษาและวิจัยเท่านั้น ผลการประเมินความเสี่ยงที่แสดงไม่ใช่การวินิจฉัยทางการแพทย์
+      หากคุณมีความกังวลเกี่ยวกับสุขภาพหัวใจ กรุณาปรึกษาแพทย์ผู้เชี่ยวชาญ
+    </p>
+  </div>
+</div><!-- /tab-info -->
+
+<script src="main.js"></script>
+</body>
+</html>
